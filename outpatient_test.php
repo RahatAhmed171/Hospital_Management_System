@@ -13,7 +13,7 @@ if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
 }
 else{
-echo "Connected successfully";
+
 }
 ?>
 
@@ -104,6 +104,7 @@ footer {
        
             <ul id="doctor-one-list" style="display: none;">
              <?php
+             ob_start();
                 $query = "SELECT docid,name FROM doctor";
                 $result = mysqli_query($conn, $query);
            
@@ -252,24 +253,38 @@ $doctorTwoName = $_POST["doctor-two-name"];
 
 // Insert data into the database
 
-
-  $doctors = [];
+$query = "SELECT docid,name FROM doctor";
+$result = mysqli_query($conn, $query);
+  
   while ($row = mysqli_fetch_assoc($result)) {
-    $doctorID = $row["docid"];
-    $doctorName = $row["name"];
+   
+    $doctorName = $row['name'];
     
     if ($doctorOneName === $doctorName) {
         // Found a match, $doctorID now contains the ID of the selected doctor
-        echo "Doctor ID: " . $doctorID;
+        $doctorOneID = $row['docid'];
         break; // Exit the loop since we found the ID
     }
+    
 }
-
+$query = "SELECT docid,name FROM doctor";
+$result = mysqli_query($conn, $query);
+while ($row2 = mysqli_fetch_assoc($result)) {
+  
+  $doctorName = $row2['name'];
+  
+  if ($doctorTwoName === $doctorName) {
+      // Found a match, $doctorID now contains the ID of the selected doctor
+      $doctorTwoID = $row2['docid'];
+      break; // Exit the loop since we found the ID
+  }
+ 
+}
 
 $sql1 = "INSERT INTO test (patient_type,test_name,test_amount,test_date,test_result,docid,opid,ipid	) VALUES ('outpatient','$test_one_name',$test_one_amount,'$test_one_date','null','$doctorOneID','$OPid',NULL)";
 $sql2 = "INSERT INTO test (patient_type,test_name,test_amount,test_date,test_result,docid,opid,ipid	) VALUES ('outpatient','$test_two_name',$test_two_amount,'$test_two_date','null','$doctorTwoID','$OPid',NULL)";
 if ($conn->query($sql1) === TRUE) {
-  echo "created successfully";
+ 
   $lastInsertedfirstId = $conn->insert_id;
 
   // Redirect to the success page with the ID as a query parameter
@@ -278,8 +293,11 @@ if ($conn->query($sql1) === TRUE) {
   echo "Error: " . $sql1 . "<br>" . $conn->error;
 }
 if ($conn->query($sql2) === TRUE) {
-  echo "created successfully";
+ 
   $lastInsertedsecondId = $conn->insert_id;
+  $output=ob_get_clean();
+  header("Location: outpatient_bill.php?inserted_first_id=" . $lastInsertedfirstId . "&inserted_second_id=" . $lastInsertedsecondId . "&data1=" . $OPid);
+  exit();
 
   // Redirect to the success page with the ID as a query parameter
   
