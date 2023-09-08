@@ -1,3 +1,68 @@
+<?php
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "hospital_management";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if (!$conn) {
+  echo "Connected unsuccessfully";
+  die("Connection failed: " . mysqli_connect_error());
+}
+else{
+echo "Connected successfully";
+}
+$outpatientID=$_GET['data1'];
+echo "$outpatientID";
+$testFirstID=$_GET['inserted_first_id'];
+$testSecondID=$_GET['inserted_second_id'];
+$sql1="SELECT name,age,phone,sex FROM outpatient where opid=$outpatientID";
+$result1 = $conn->query($sql1);
+
+if ($result1) {
+    $row1 = $result1->fetch_assoc();
+    $patient_name = $row1['name'];
+    $patient_age = $row1['age'];
+    $patient_phone = $row1['phone'];
+    $patient_sex = $row1['sex'];
+    $result1->free();
+} else {
+    // Handle any errors with the query.
+    echo "Error in query 1: " . $conn->error;
+}
+$sql2="SELECT test_name,test_amount FROM test where test_id=$testFirstID";
+$result2 = $conn->query($sql2);
+
+if ($result2) {
+    $row2 = $result2->fetch_assoc();
+    $testName1 = $row2['test_name'];
+    $testAmount1 = $row2['test_amount'];
+    $result2->free();
+} else {
+    // Handle any errors with the query.
+    echo "Error in query 1: " . $conn->error;
+}
+$sql3="SELECT test_name,test_amount FROM test where test_id=$testSecondID";
+$result3 = $conn->query($sql3);
+
+if ($result3) {
+    $row3 = $result3->fetch_assoc();
+    $testName2 = $row3['test_name'];
+    $testAmount2 = $row3['test_amount'];
+    $result3->free();
+} else {
+    // Handle any errors with the query.
+    echo "Error in query 2: " . $conn->error;
+}
+
+// Calculate the total amount
+$totalAmount = $testAmount1 + $testAmount2;
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -55,25 +120,25 @@ footer {
   <div>
   <form>
   <label for="name">Name:</label>
-  <input type="text" id="name" value="John Doe" readonly><br>
+  <input type="text" id="name" value="<?php echo $patient_name; ?>"  readonly><br>
   
   <label for="age">Age:</label>
-  <input type="number" id="age" value="30" readonly><br>
+  <input type="number" id="age" value="<?php echo $patient_age; ?>"  readonly><br>
   
   <label for="sex">Sex:</label>
-  <input type="text" id="sex" value="Male" readonly><br>
+  <input type="text" id="sex" value="<?php echo $patient_sex; ?>"  readonly><br>
   
   <label for="phone">Phone Number:</label>
-  <input type="tel" id="phone" value="123-456-7890" readonly><br>
+  <input type="tel" id="phone" value="<?php echo $patient_phone; ?>"  readonly><br>
   
   <label for="testName">Test name:</label>
-  <input type="text" id="testName" value="COVID-19 Test" readonly>
+  <input type="text" id="testName" value="<?php echo $testAmount1; ?>" readonly>
   
   <label for="testAmount">Test amount:</label>
-  <input type="text" id="testAmount" value="$50" readonly><br>
+  <input type="text" id="testAmount" value="<?php echo $testAmount2; ?>"  readonly><br>
   
   <label for="totalBill">Total bill:</label>
-  <input type="text" id="totalBill" value="$50" readonly><br>
+  <input type="text" id="totalBill" value="<?php echo $totalAmount; ?>" readonly><br>
   </form>
   </div>
   <button>Print Bill</button>
