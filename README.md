@@ -7,5 +7,6 @@ This is university team project for the course: Database Management System Labor
 3) Ayan Barua 
 4) Siblo Md Badhon 
 
-<h2><u> Database Design:</u>![Hospital Management System](https://github.com/RahatAhmed171/Hospital_Management_System/assets/69518859/26334345-c104-4c5a-81c6-315d72a795ed)
+<h2>Database design and project scope discussed here: https://docs.google.com/document/d/1IVnSAc55ejUjYt6SKUjA_uXOx7_nYhQA_TAy0tXIeWA/edit?usp=drivesdk
 </h2>
+
